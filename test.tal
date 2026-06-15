@@ -1,0 +1,35 @@
+( devices )
+|00 @System  &vector $2 &pad $6 &r $2 &g $2 &b $2
+|20 @Screen  &vector $2 &width $2 &height $2 &pad $2 &x $2 &y $2 &addr $2 &pixel $1 &sprite $1
+
+( macros )
+%INIT-X { #0008 .Screen/x DEO2 } ( -- )
+%INIT-Y { #0008 .Screen/y DEO2 } ( -- )
+%8ADD-X { .Screen/x DEI2 #0008 ADD2 .Screen/x DEO2 } ( -- )
+%8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
+
+( main program )
+|0100
+      ( set system colors )
+      #2ce9 .System/r DEO2
+      #01c0 .System/g DEO2
+      #2ce5 .System/b DEO2
+
+      ( set x,y coordinates )
+      INIT-X INIT-Y
+
+      ;lettera .Screen/addr DEO2
+
+      #00 .Screen/sprite DEO 8ADD-X
+      #01 .Screen/sprite DEO 8ADD-X
+      #02 .Screen/sprite DEO 8ADD-X
+      #03 .Screen/sprite DEO 8ADD-Y
+      
+      ;letterb .Screen/addr DEO2
+
+      #01 .Screen/sprite DEO
+
+BRK
+
+@lettera [ 00 02 06 0a 1e 22 42 e7 ]
+@letterb [ 3c ce 43 6e 66 43 47 fc ]
