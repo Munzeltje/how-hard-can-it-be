@@ -51,6 +51,18 @@
       ;letterk .Screen/addr DEO2
       #01 .Screen/sprite DEO 8ADD-Y
       
+      ;letterr .Screen/addr DEO2
+      #01 .Screen/sprite DEO 8ADD-Y
+      
+      ;letters .Screen/addr DEO2
+      #01 .Screen/sprite DEO 8ADD-Y
+      
+      ;lettert .Screen/addr DEO2
+      #01 .Screen/sprite DEO 8ADD-Y
+      
+      ;letteru .Screen/addr DEO2
+      #01 .Screen/sprite DEO 8ADD-Y
+      
       ;letterv .Screen/addr DEO2
       #01 .Screen/sprite DEO 8ADD-Y
       
