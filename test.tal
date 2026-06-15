@@ -28,6 +28,22 @@
 
       ;letterc .Screen/addr DEO2
 
+      #03 .Screen/sprite DEO 8ADD-Y 
+
+      ;letterd .Screen/addr DEO2
+
+      #03 .Screen/sprite DEO 8ADD-Y 
+
+      ;lettere .Screen/addr DEO2
+
+      #03 .Screen/sprite DEO 8ADD-Y 
+
+      ;letterf .Screen/addr DEO2
+
+      #03 .Screen/sprite DEO 8ADD-Y 
+
+      ;letterg .Screen/addr DEO2
+
       #03 .Screen/sprite DEO
 
 BRK
