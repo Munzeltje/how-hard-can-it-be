@@ -47,6 +47,9 @@
 
       ;letterj .Screen/addr DEO2
       #01 .Screen/sprite DEO 8ADD-Y
+
+      ;letterk .Screen/addr DEO2
+      #01 .Screen/sprite DEO 8ADD-Y
       
       ;letterv .Screen/addr DEO2
       #01 .Screen/sprite DEO 8ADD-Y
