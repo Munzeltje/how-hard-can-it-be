@@ -19,29 +19,25 @@
       INIT-X INIT-Y
 
       ;lettera .Screen/addr DEO2
-
-      #03 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 8ADD-Y
       
       ;letterb .Screen/addr DEO2
       #01 .Screen/sprite DEO 8ADD-Y
 
       ;letterc .Screen/addr DEO2
-
-      #03 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 8ADD-Y
 
       ;letterd .Screen/addr DEO2
-
-      #03 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 8ADD-Y
 
       ;lettere .Screen/addr DEO2
-
-      #03 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 8ADD-Y 
 
       ;letterf .Screen/addr DEO2
-
-      #03 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 8ADD-Y
 
       ;letterg .Screen/addr DEO2
+      #01 .Screen/sprite DEO 8ADD-Y
       
       ;letterv .Screen/addr DEO2
       #01 .Screen/sprite DEO 8ADD-Y
@@ -56,10 +52,7 @@
       #01 .Screen/sprite DEO 8ADD-Y
 
       ;letterz .Screen/addr DEO2
-      #03 .Screen/sprite DEO 8ADD-Y 
-
-      #03 .Screen/sprite DEO 8ADD-Y
-      
+      #01 .Screen/sprite DEO 8ADD-Y 
 
 BRK
 
