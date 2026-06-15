@@ -20,14 +20,15 @@
 
       ;lettera .Screen/addr DEO2
 
-      #00 .Screen/sprite DEO 8ADD-X
-      #01 .Screen/sprite DEO 8ADD-X
-      #02 .Screen/sprite DEO 8ADD-X
-      #03 .Screen/sprite DEO 8ADD-Y
+      #03 .Screen/sprite DEO 8ADD-Y 
       
       ;letterb .Screen/addr DEO2
+      
+      #03 .Screen/sprite DEO 8ADD-Y 
 
-      #01 .Screen/sprite DEO
+      ;letterc .Screen/addr DEO2
+
+      #03 .Screen/sprite DEO
 
 BRK
 
