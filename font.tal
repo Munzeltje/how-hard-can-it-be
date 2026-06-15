@@ -19,3 +19,18 @@
 @letterx [ c3 e7 7e 3c 3c 7e e7 c3 ]
 @lettery [ c3 e7 7e 3c 18 18 18 18 ]
 @letterz [ ff ff 0e 1c 38 70 ff ff ]
+
+@digit0 [ 18 3c 66 66 66 66 3c 18 ]
+@digit1 [ 18 78 18 18 18 18 18 7e ]
+@digit2 [ 18 3c 66 0c 18 30 60 7e ]
+@digit3 [ 3c 66 46 1c 06 c6 6c 38 ]
+@digit4 [ 04 0c 14 34 24 7e 04 1e ]
+@digit5 [ 7f 61 60 3c 06 c6 6c 18 ]
+@digit6 [ 1c 36 60 7c 66 66 3c 18 ]
+@digit7 [ 7f c3 02 04 08 10 30 20 ]
+@digit8 [ 18 3c 66 24 7e c3 42 3c ]
+@digit9 [ 18 3c 66 66 3e 06 6c 38 ]
+
+@period [ 00 00 00 00 00 00 18 18 ]
+@questionmark [ 3c 66 46 0c 18 00 18 18 ]
+@exclamationmark [ 18 18 18 18 18 00 18 18 ]

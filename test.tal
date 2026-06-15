@@ -7,6 +7,7 @@
 %INIT-Y { #0008 .Screen/y DEO2 } ( -- )
 %8ADD-X { .Screen/x DEI2 #0008 ADD2 .Screen/x DEO2 } ( -- )
 %8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
+%9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
 
 ( main program )
 |0100
@@ -19,64 +20,103 @@
       INIT-X INIT-Y
 
       ;lettera .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letterb .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterc .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterd .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;lettere .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 9ADD-Y 
 
       ;letterf .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterg .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterh .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letteri .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterj .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterk .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letterr .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letters .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;lettert .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letteru .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letterv .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letterw .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;letterx .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
       
       ;lettery .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y
+      #01 .Screen/sprite DEO 9ADD-Y
 
       ;letterz .Screen/addr DEO2
-      #01 .Screen/sprite DEO 8ADD-Y 
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit0 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit1 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit2 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit3 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit4 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit5 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit6 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit7 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit8 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;digit9 .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;period .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;questionmark .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
+
+      ;exclamationmark .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y 
 
 BRK
 
