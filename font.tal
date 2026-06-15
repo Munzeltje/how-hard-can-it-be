@@ -1,5 +1,11 @@
 @lettera [ 00 02 06 0a 1e 22 42 e7 ]
 @letterb [ 3c ce 43 6e 66 43 47 fc ]
+@letterc [ 38 64 c2 80 c0 42 76 3c ]
+@letterd [ 38 cc 44 46 42 42 74 98 ]
+@lettere [ ff 47 41 78 78 41 47 ff ]
+@letterf [ ff 47 41 78 78 40 40 e0 ]
+@letterg [ 38 64 c0 8c d6 42 76 3c ]
+
 @letterv [ c3 c3 c3 e7 7e 3c 3c 18 ]
 @letterw [ c3 c3 db db ff ff 66 66 ]
 @letterx [ c3 e7 7e 3c 3c 7e e7 c3 ]
