@@ -6,6 +6,10 @@
 @letterf [ ff 47 41 78 78 40 40 e0 ]
 @letterg [ 38 64 c0 8c d6 42 76 3c ]
 
+@letterr [ fe ff e7 e7 fe fe ef e7 ]
+@letters [ 3f ff f0 fc 3f 0f ff fc ]
+@lettert [ ff ff ff 18 18 18 18 18 ]
+@letteru [ c3 c3 c3 c3 c3 e7 7e 7e ]
 @letterv [ c3 c3 c3 e7 7e 3c 3c 18 ]
 @letterw [ c3 c3 db db ff ff 66 66 ]
 @letterx [ c3 e7 7e 3c 3c 7e e7 c3 ]
