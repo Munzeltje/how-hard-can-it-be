@@ -109,13 +109,13 @@
       ;digit9 .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y 
 
-      ;period .Screen/addr DEO2
+      ;char-fstop .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y 
 
-      ;questionmark .Screen/addr DEO2
+      ;char-quest .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y 
 
-      ;exclamationmark .Screen/addr DEO2
+      ;char-bang .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y 
 
 BRK
