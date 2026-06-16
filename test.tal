@@ -1,141 +1,141 @@
 ( devices )
 |00 @System  &vector $2 &pad $6 &r $2 &g $2 &b $2
+|10 @Console $8 &write $2
 |20 @Screen  &vector $2 &width $2 &height $2 &pad $2 &x $2 &y $2 &addr $2 &pixel $1 &sprite $1
+|30 @Audio0     [ &vector $2 &position $2 &output $1 &pad   $3 &adsr   $2 &length $2 &addr $2 &volume $1 &pitch $1 ]
+|80 @Controller [ &vector $2 &button $1 &key $1 ]
 
 ( macros )
+%EMIT { .Console/write DEO } ( char -- )
+%EMIT2 { DUP2 SWP EMIT EMIT }
 %INIT-X { #0008 .Screen/x DEO2 } ( -- )
 %INIT-Y { #0008 .Screen/y DEO2 } ( -- )
 %8ADD-X { .Screen/x DEI2 #0008 ADD2 .Screen/x DEO2 } ( -- )
+%9ADD-X { .Screen/x DEI2 #0009 ADD2 .Screen/x DEO2 } ( -- )
 %8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
 %9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
+%GET-NOTE { #00 SWP ;melody ADD2 LDA }
+%MELODY_LENGTH { #08 }
+%SINE_LENGTH { #a0 }
+%SAMPLE_LENGTH { #0100 }
+
+( variables )
+
+|0000
+
+@timer     $1
+@progress  $1
+@sine-ctr  $1
 
 ( main program )
 |0100
       ( set system colors )
-      #2ce9 .System/r DEO2
-      #01c0 .System/g DEO2
-      #2ce5 .System/b DEO2
+      #4cff .System/r DEO2
+      #4dfd .System/g DEO2
+      #4cf0 .System/b DEO2
 
       ( set x,y coordinates )
-      INIT-X INIT-Y
+      #0000 .Screen/x DEO2
+      #0000 .Screen/y DEO2
 
-      ;lettera .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
+      ;test_string ;print JSR2
       
-      ;letterb .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
+      ;on-controller .Controller/vector DEO2
+      ;on-frame .Screen/vector DEO2
 
-      ;letterc .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterd .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;lettere .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;letterf .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterg .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterh .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letteri .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterj .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterk .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterl .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterm .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;lettern .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;lettero .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterp .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterq .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterr .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letters .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;lettert .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letteru .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterv .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterw .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterx .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;lettery .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterz .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit0 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit1 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit2 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit3 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit4 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit5 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit6 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit7 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit8 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit9 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;period .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;questionmark .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;exclamationmark .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
+      	( setup synth )
+      #0248 .Audio0/adsr DEO2
+      ;bse .Audio0/addr DEO2
+      #0100 .Audio0/length DEO2
+      #dd .Audio0/volume DEO ( TODO: turn ON )
 BRK
+
+@on-controller ( -- )
+  #0040 .Screen/x DEO2
+  #0040 .Screen/y DEO2
+  ;message ;print JSR2
+BRK
+
+@on-frame ( -> )
+	( incr ) .timer LDZ INC .timer STZ 
+	( skip ) .timer LDZ #10 EQU #01 JCN [ BRK ]
+  #0000 
+  &sine-loop
+    DUP2 DUP2 ;saw ADD2 LDA .sine-ctr LDZ #00 SWP ;sine ADD2 LDA ADD ROT ROT 
+    ;bse ADD2 STA
+    ( increment sine offset, with mask )
+    .sine-ctr LDZ INC INC INC INC SINE_LENGTH #01 SUB AND .sine-ctr STZ
+    INC2 DUP2 SAMPLE_LENGTH LTH2 ,&sine-loop JCN
+  POP2
+
+	.progress LDZ 
+	( play note )    DUP GET-NOTE .Audio0/pitch DEO
+	( incr )  INC MELODY_LENGTH #01 SUB AND .progress STZ
+	#00 .timer STZ
+BRK
+
+
+( get a sprite address from an ASCII value )
+@get-char ( ascii -- sprite-addr* )
+  #20 ( space char, start of font table )
+  SUB #00 SWP #30 SFT2 ;char-space ADD2
+JMP2r
+
+( print a string, getting the correct char at each step )
+@print ( string-addr* -- )
+  ,&string-addr STR2
+  &p_loop
+    ,&string-addr LDR2 LDA DUP #00 EQU ,&print-end JCN
+    ;get-char JSR2 .Screen/addr DEO2
+    #03 .Screen/sprite DEO 9ADD-X
+    ,&string-addr LDR2 INC2
+    ,&string-addr STR2 ,&p_loop JMP
+&print-end
+POP
+JMP2r
+&string-addr $2
+
+
+
+@test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
+@message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
+
+@bse $0100
+
+@saw 
+	0003 0609 0c0f 1215 181b 1e21 2427 2a2d
+	3033 3639 3b3e 4143 4649 4b4e 5052 5557
+	595b 5e60 6264 6667 696b 6c6e 7071 7274
+	7576 7778 797a 7b7b 7c7d 7d7e 7e7e 7e7e
+	7f7e 7e7e 7e7e 7d7d 7c7b 7b7a 7978 7776
+	7574 7271 706e 6c6b 6967 6664 6260 5e5b
+	5957 5552 504e 4b49 4643 413e 3b39 3633
+	302d 2a27 2421 1e1b 1815 120f 0c09 0603
+	00fd faf7 f4f1 eeeb e8e5 e2df dcd9 d6d3
+	d0cd cac7 c5c2 bfbd bab7 b5b2 b0ae aba9
+	a7a5 a2a0 9e9c 9a99 9795 9492 908f 8e8c
+	8b8a 8988 8786 8585 8483 8382 8282 8282
+	8182 8282 8282 8383 8485 8586 8788 898a
+	8b8c 8e8f 9092 9495 9799 9a9c 9ea0 a2a5
+	a7a9 abae b0b2 b5b7 babd bfc2 c5c7 cacd
+	d0d3 d6d9 dcdf e2e5 e8eb eef1 f4f7 fafd 
+
+@melody
+  54 52 54 4f 4b 4f 48 ff
+
+@sine
+80 83 86 89 8c 8f 92 95  98 9b 9e a1 a4 a7 aa ad  
+b0 b3 b5 b8 ba bd bf c2  c4 c7 c9 cb cd cf d1 d3  
+d5 d6 d8 da db dc de df  e0 e1 e2 e3 e3 e4 e5 e5  
+e5 e6 e6 e6 e6 e6 e6 e5  e5 e4 e4 e3 e2 e1 e0 df  
+de dd dc da d9 d7 d5 d4  d2 d0 ce cc ca c7 c5 c3  
+c0 be bb b9 b6 b4 b1 ae  ab a8 a6 a3 a0 9d 9a 97  
+93 90 8d 8a 87 84 81 7e  7a 77 74 71 6e 6b 68 65  
+62 5f 5c 59 56 53 50 4e  4b 48 46 43 40 3e 3c 39  
+37 35 33 31 2f 2d 2b 29  28 26 25 23 22 21 20 1e  
+1e 1d 1c 1b 1b 1a 1a 19  19 19 19 19 19 1a 1a 1b  
+1b 1c 1c 1d 1e 1f 20 22  23 24 26 27 29 2b 2d 2e  
+30 32 34 37 39 3b 3e 40  42 45 48 4a 4d 50 53 55  
+58 5b 5e 61 64 67 6a 6d  70 74 77 7a 7d 80 80 80        
 
 ~font.tal
