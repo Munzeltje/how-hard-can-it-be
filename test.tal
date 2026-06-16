@@ -30,8 +30,10 @@
       
       ;on-controller .Controller/vector DEO2
 
+      ;on-note-0-finish .Audio0/vector DEO2
+
       	( setup synth )
-      #0208 .Audio0/adsr DEO2
+      #0222 .Audio0/adsr DEO2
       ;saw .Audio0/addr DEO2
       #0100 .Audio0/length DEO2
       #dd .Audio0/volume DEO ( TODO: turn ON )
@@ -42,6 +44,11 @@ BRK
   #0040 .Screen/y DEO2
   ;message ;print JSR2
   #3c .Audio0/pitch DEO
+BRK
+
+@on-note-0-finish
+  ;melody_offset LDA DUP #00 SWP ;melody ADD2 LDA .Audio0/pitch DEO
+  INC ;melody_length LDA #01 SUB AND ;melody_offset STA
 BRK
 
 ( get a sprite address from an ASCII value )
@@ -88,5 +95,11 @@ JMP2r
 	a7a9 abae b0b2 b5b7 babd bfc2 c5c7 cacd
 	d0d3 d6d9 dcdf e2e5 e8eb eef1 f4f7 fafd 
 
+@melody
+  54 52 54 4f 4b 4f 48 6b
+
+@melody_length 08
+
+@melody_offset 00
 
 ~font.tal
