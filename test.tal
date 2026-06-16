@@ -9,6 +9,7 @@
 %INIT-X { #0008 .Screen/x DEO2 } ( -- )
 %INIT-Y { #0008 .Screen/y DEO2 } ( -- )
 %8ADD-X { .Screen/x DEI2 #0008 ADD2 .Screen/x DEO2 } ( -- )
+%9ADD-X { .Screen/x DEI2 #0009 ADD2 .Screen/x DEO2 } ( -- )
 %8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
 %9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
 
@@ -120,6 +121,12 @@
       ;char-bang .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y 
 
+      #0000 .Screen/x DEO2
+      #0000 .Screen/y DEO2
+
+      ;test_string ;print JSR2
+
+
 BRK
 
 
@@ -128,6 +135,24 @@ BRK
   #20 ( space char, start of font table )
   SUB #00 SWP #30 SFT2 ;char-space ADD2
 JMP2r
+
+( print a string, getting the correct char at each step )
+@print ( string-addr* -- )
+  ,&string-addr STR2
+  &p_loop
+    ,&string-addr LDR2 LDA DUP #00 EQU ,&print-end JCN
+    ;get-char JSR2 .Screen/addr DEO2
+    #03 .Screen/sprite DEO 9ADD-X
+    ,&string-addr LDR2 INC2
+    ,&string-addr STR2 ,&p_loop JMP
+&print-end
+POP
+JMP2r
+&string-addr $2
+
+
+
+@test_string "HI 00 
 
 
 
