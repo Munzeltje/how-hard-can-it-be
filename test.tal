@@ -39,17 +39,35 @@
 
       ;letterg .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y
-
+      
       ;letterh .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y
-
+      
       ;letteri .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y
-
+      
       ;letterj .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y
-
+      
       ;letterk .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y
+      
+      ;letterl .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y
+      
+      ;letterm .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y
+      
+      ;lettern .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y
+      
+      ;lettero .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y
+      
+      ;letterp .Screen/addr DEO2
+      #01 .Screen/sprite DEO 9ADD-Y
+      
+      ;letterq .Screen/addr DEO2
       #01 .Screen/sprite DEO 9ADD-Y
       
       ;letterr .Screen/addr DEO2

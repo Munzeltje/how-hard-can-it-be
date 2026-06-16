@@ -9,7 +9,12 @@
 @letteri [ 1c 08 08 08 08 08 08 1c ]
 @letterj [ 1c 08 08 08 08 08 48 30 ]
 @letterk [ e6 44 68 78 68 44 42 e7 ]
-
+@letterl [ e0 e0 e0 e0 e0 e0 ff ff ]
+@letterm [ 66 66 ff ff db db c3 c3 ]
+@lettern [ c3 e3 f3 fb df cf c7 c3 ]
+@lettero [ 3c 7e e7 c3 c3 e7 7e 3c ]
+@letterp [ fe ff e7 e7 fe fe e0 e0 ]
+@letterq [ 18 3c 7e e7 e7 7e 3f 1b ]
 @letterr [ fe ff e7 e7 fe fe ef e7 ]
 @letters [ 3f ff f0 fc 3f 0f ff fc ]
 @lettert [ ff ff ff 18 18 18 18 18 ]
