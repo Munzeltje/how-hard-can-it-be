@@ -14,6 +14,16 @@
 %9ADD-X { .Screen/x DEI2 #0009 ADD2 .Screen/x DEO2 } ( -- )
 %8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
 %9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
+%GET-NOTE { #00 SWP ;melody ADD2 LDA }
+%MELODY_LENGTH { #08 }
+
+
+( variables )
+
+|0000
+
+@timer     $1
+@progress  $1
 
 ( main program )
 |0100
@@ -29,11 +39,12 @@
       ;test_string ;print JSR2
       
       ;on-controller .Controller/vector DEO2
+      ;on-frame .Screen/vector DEO2
 
-      ;on-note-0-finish .Audio0/vector DEO2
+(      ;on-note-0-finish .Audio0/vector DEO2 )
 
       	( setup synth )
-      #0222 .Audio0/adsr DEO2
+      #0208 .Audio0/adsr DEO2
       ;saw .Audio0/addr DEO2
       #0100 .Audio0/length DEO2
       #dd .Audio0/volume DEO ( TODO: turn ON )
@@ -43,13 +54,17 @@ BRK
   #0040 .Screen/x DEO2
   #0040 .Screen/y DEO2
   ;message ;print JSR2
-  #3c .Audio0/pitch DEO
 BRK
 
-@on-note-0-finish
-  ;melody_offset LDA DUP #00 SWP ;melody ADD2 LDA .Audio0/pitch DEO
-  INC ;melody_length LDA #01 SUB AND ;melody_offset STA
+@on-frame ( -> )
+	( incr ) .timer LDZ INC .timer STZ 
+	( skip ) .timer LDZ #10 EQU #01 JCN [ BRK ]
+	.progress LDZ 
+	( play note )    DUP GET-NOTE .Audio0/pitch DEO
+	( incr )  INC MELODY_LENGTH #01 SUB AND .progress STZ
+	#00 .timer STZ
 BRK
+
 
 ( get a sprite address from an ASCII value )
 @get-char ( ascii -- sprite-addr* )
@@ -96,10 +111,5 @@ JMP2r
 	d0d3 d6d9 dcdf e2e5 e8eb eef1 f4f7 fafd 
 
 @melody
-  54 52 54 4f 4b 4f 48 6b
-
-@melody_length 08
-
-@melody_offset 00
-
+  54 52 54 4f 4b 4f 48 ff
 ~font.tal
