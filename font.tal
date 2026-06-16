@@ -27,6 +27,7 @@
 @char-colon $08
 @char-semic $08
 @char-lt    $08
+@char-equal $08
 @char-gt    $08
 @char-quest [ 3c 66 46 0c 18 00 18 18 ]
 @char-at    $08
