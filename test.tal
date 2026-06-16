@@ -2,6 +2,7 @@
 |00 @System  &vector $2 &pad $6 &r $2 &g $2 &b $2
 |10 @Console $8 &write $2
 |20 @Screen  &vector $2 &width $2 &height $2 &pad $2 &x $2 &y $2 &addr $2 &pixel $1 &sprite $1
+|80 @Controller [ &vector $2 &button $1 &key $1 ]
 
 ( macros )
 %EMIT { .Console/write DEO } ( char -- )
@@ -25,10 +26,15 @@
       #0000 .Screen/y DEO2
 
       ;test_string ;print JSR2
-
-
+      
+      ;on-controller .Controller/vector DEO2
 BRK
 
+@on-controller ( -- )
+  #0040 .Screen/x DEO2
+  #0040 .Screen/y DEO2
+  ;message ;print JSR2
+BRK
 
 ( get a sprite address from an ASCII value )
 @get-char ( ascii -- sprite-addr* )
@@ -53,7 +59,7 @@ JMP2r
 
 
 @test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
-
+@message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 
 
 ~font.tal
