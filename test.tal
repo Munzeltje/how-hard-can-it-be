@@ -21,106 +21,6 @@
       #4cf0 .System/b DEO2
 
       ( set x,y coordinates )
-      INIT-X INIT-Y
-      LIT "A ;get-char JSR2 .Screen/addr DEO2
-      #03 .Screen/sprite DEO 9ADD-Y
-      
-      LIT "! ;get-char JSR2 .Screen/addr DEO2
-      #03 .Screen/sprite DEO 9ADD-Y
-
-      ;letterc .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterd .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;lettere .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;letterf .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterg .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterh .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letteri .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterj .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterk .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterr .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letters .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;lettert .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letteru .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterv .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterw .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;letterx .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-      
-      ;lettery .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y
-
-      ;letterz .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit0 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit1 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit2 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit3 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit4 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit5 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit6 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit7 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit8 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;digit9 .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;char-fstop .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;char-quest .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
-      ;char-bang .Screen/addr DEO2
-      #01 .Screen/sprite DEO 9ADD-Y 
-
       #0000 .Screen/x DEO2
       #0000 .Screen/y DEO2
 
@@ -152,7 +52,7 @@ JMP2r
 
 
 
-@test_string "HI 00 
+@test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
 
 
 
