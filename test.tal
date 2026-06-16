@@ -16,7 +16,8 @@
 %9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
 %GET-NOTE { #00 SWP ;melody ADD2 LDA }
 %MELODY_LENGTH { #08 }
-
+%SINE_LENGTH { #60 }
+%SAMPLE_LENGTH { #0100 }
 
 ( variables )
 
@@ -24,6 +25,7 @@
 
 @timer     $1
 @progress  $1
+@sine-ctr  $1
 
 ( main program )
 |0100
@@ -45,7 +47,7 @@
 
       	( setup synth )
       #0208 .Audio0/adsr DEO2
-      ;saw .Audio0/addr DEO2
+      ;bse .Audio0/addr DEO2
       #0100 .Audio0/length DEO2
       #dd .Audio0/volume DEO ( TODO: turn ON )
 BRK
@@ -59,6 +61,15 @@ BRK
 @on-frame ( -> )
 	( incr ) .timer LDZ INC .timer STZ 
 	( skip ) .timer LDZ #10 EQU #01 JCN [ BRK ]
+  #0000 
+  &sine-loop
+    DUP2 DUP2 ;saw ADD2 LDA .sine-ctr LDZ #00 SWP ;sine ADD2 LDA ADD ROT ROT 
+    ;bse ADD2 STA
+    INC2 DUP2 SAMPLE_LENGTH LTH2 ,&sine-loop JCN
+  POP2
+  .sine-ctr LDZ INC SINE_LENGTH #01 SUB AND .sine-ctr STZ
+
+  ( increment sine offset, with mask )
 	.progress LDZ 
 	( play note )    DUP GET-NOTE .Audio0/pitch DEO
 	( incr )  INC MELODY_LENGTH #01 SUB AND .progress STZ
@@ -91,6 +102,7 @@ JMP2r
 @test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 
+@bse $0100
 
 @saw 
 	0003 0609 0c0f 1215 181b 1e21 2427 2a2d
@@ -112,4 +124,14 @@ JMP2r
 
 @melody
   54 52 54 4f 4b 4f 48 ff
+
+@sine
+  8c 81 a4 98 ba b0 cd c4 db d5 e3 e0 e6 e5 e2 e5
+  d9 de ca d2 b6 c0 a0 ab 87 93 6e 7a 56 62 41 4b
+  2f 37 22 28 1b 1e 19 19 1e 1b 29 23 39 30 4d 43
+  64 58 7d 70 96 8a ae a2 c2 b8 d3 cb df da e5 e3
+  e5 e6 df e3 d3 da c2 cb ae b8 96 a2 7d 8a 64 70
+  4d 58 39 43 29 30 1e 23 19 1b 1b 19 22 1d 2f 28
+
+
 ~font.tal
