@@ -48,6 +48,7 @@
 @timer     $1
 @progress  $1
 @sine-ctr  $1
+@current-slide $2
 
 ( main program )
 |0100
@@ -56,17 +57,6 @@
       #4dfd .System/g DEO2
       #4cf0 .System/b DEO2
 
-      ( set x,y coordinates )
-      #0000 .Screen/x DEO2
-      #0000 .Screen/y DEO2
-
-      #0010 .Screen/width DEI2 #03 ;draw-rect JSR2
-
-
-      #0010 .Screen/x DEO2
-      #0004 .Screen/y DEO2
-
-      ;stedin-header #0c ;print JSR2
       
       ;on-controller .Controller/vector DEO2
       ;on-frame .Screen/vector DEO2
@@ -76,16 +66,52 @@
       ;bse .Audio0/addr DEO2
       #0100 .Audio0/length DEO2
       #dd .Audio0/volume DEO ( TODO: turn ON )
+      ;draw-slide JSR2
 BRK
 
 @on-controller ( -- )
-  #0000 .Screen/x DEO2
-  #0010 .Screen/y DEO2
-  .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
-  #0040 .Screen/x DEO2
-  #0040 .Screen/y DEO2
-  ;message #08 ;print JSR2
+	;draw-slide JSR2
 BRK
+
+@draw-slide ( -- )
+  .current-slide LDZ2 LDA2 ,&ds-continue JCN
+  ;slide-1 .current-slide STZ2 
+  &ds-continue
+    ( draw yellow bar )
+    #0000 .Screen/x DEO2
+    #0000 .Screen/y DEO2
+    #0010 .Screen/width DEI2 #03 ;draw-rect JSR2
+    ( stedin header )
+    #0010 .Screen/x DEO2
+    #0004 .Screen/y DEO2
+    ;stedin-header #0c ;print JSR2
+    ( draw background )
+    #0000 .Screen/x DEO2
+    #0010 .Screen/y DEO2
+    .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
+    ( get current slide )
+    #0020 .Screen/x DEO2
+    #0030 .Screen/y DEO2
+    .current-slide LDZ2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0040 .Screen/y DEO2
+    .current-slide LDZ2 #0002 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0050 .Screen/y DEO2
+    .current-slide LDZ2 #0004 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0060 .Screen/y DEO2
+    .current-slide LDZ2 #0006 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0070 .Screen/y DEO2
+    .current-slide LDZ2 #0008 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0080 .Screen/y DEO2
+    .current-slide LDZ2 #000a ADD2 LDA2 #08 ;print JSR2
+    
+    ( move pointer for next time ) 
+    .current-slide LDZ2 #000c ADD2 .current-slide STZ2
+JMP2r
 
 @on-frame ( -> )
 	( incr ) .timer LDZ INC .timer STZ 
@@ -151,10 +177,29 @@ JMP2r
 JMP2r    
 &dl_color $1
 
-
-@test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
+( slides )
+@slide-1
+=message
+=test-string
+=empty-string
+=empty-string
+=stedin-header
+=test-string
+@slide-2
+=message2
+=empty-string
+=message3
+=empty-string
+=test-string
+=empty-string
+@end-of-slides
+00 00
+@empty-string 00
+@test-string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
 @stedin-header "STEDIN 00
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
+@message2 "THEY 20 "ARE 20 "TAKING 20 "THE 20 "HOBBITS 20 "TO 20 "ISENGARD 00
+@message3 "TODAY 20 "IS 20 "A 20 "GOOD 20 "DAY 20 "FOR 20 "POPCORN 00
 
 @bse $0100
 
