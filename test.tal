@@ -1,5 +1,4 @@
 ( to-do )
-( Make drawing functions take shorts )
 ( Pages )
 ( 	each page is a fixed number of pointers to strings )
 (   the on controller function increments the page pointer then redraws )
@@ -67,7 +66,7 @@
       #0010 .Screen/x DEO2
       #0004 .Screen/y DEO2
 
-      ;stedin-header ;print JSR2
+      ;stedin-header #0c ;print JSR2
       
       ;on-controller .Controller/vector DEO2
       ;on-frame .Screen/vector DEO2
@@ -85,7 +84,7 @@ BRK
   .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
   #0040 .Screen/x DEO2
   #0040 .Screen/y DEO2
-  ;message ;print JSR2
+  ;message #08 ;print JSR2
 BRK
 
 @on-frame ( -> )
@@ -114,18 +113,20 @@ BRK
 JMP2r
 
 ( print a string, getting the correct char at each step )
-@print ( string-addr* -- )
+@print ( string-addr* color -- )
+  ,&print-color STR
   ,&string-addr STR2
   &p_loop
     ,&string-addr LDR2 LDA DUP #00 EQU ,&print-end JCN
     ;get-char JSR2 .Screen/addr DEO2
-    #0c .Screen/sprite DEO 9ADD-X
+    ,&print-color LDR .Screen/sprite DEO 9ADD-X
     ,&string-addr LDR2 INC2
     ,&string-addr STR2 ,&p_loop JMP
 &print-end
 POP
 JMP2r
 &string-addr $2
+&print-color $1
 
 @draw-rect ( height^ width^ color -- )
     ,&dr_color STR
