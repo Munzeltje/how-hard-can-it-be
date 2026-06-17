@@ -94,19 +94,19 @@ BRK
     #0030 .Screen/y DEO2
     .current-slide LDZ2 LDA2 #08 ;print JSR2
     #0020 .Screen/x DEO2
-    #0040 .Screen/y DEO2
+    #0060 .Screen/y DEO2
     .current-slide LDZ2 #0002 ADD2 LDA2 #08 ;print JSR2
     #0020 .Screen/x DEO2
-    #0050 .Screen/y DEO2
+    #0080 .Screen/y DEO2
     .current-slide LDZ2 #0004 ADD2 LDA2 #08 ;print JSR2
     #0020 .Screen/x DEO2
-    #0060 .Screen/y DEO2
+    #00a0 .Screen/y DEO2
     .current-slide LDZ2 #0006 ADD2 LDA2 #08 ;print JSR2
     #0020 .Screen/x DEO2
-    #0070 .Screen/y DEO2
+    #00c0 .Screen/y DEO2
     .current-slide LDZ2 #0008 ADD2 LDA2 #08 ;print JSR2
     #0020 .Screen/x DEO2
-    #0080 .Screen/y DEO2
+    #00e0 .Screen/y DEO2
     .current-slide LDZ2 #000a ADD2 LDA2 #08 ;print JSR2
     
     ( move pointer for next time ) 
@@ -179,18 +179,18 @@ JMP2r
 
 ( slides )
 @slide-1
-=message
-=test-string
+=s1h
 =empty-string
 =empty-string
-=stedin-header
-=test-string
+=s1l1
+=empty-string
+=empty-string
 @slide-2
-=message2
-=empty-string
-=message3
-=empty-string
-=test-string
+=s2h
+=s2l1
+=s2l2
+=s2l3
+=s2l4
 =empty-string
 @end-of-slides
 00 00
@@ -200,7 +200,13 @@ JMP2r
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 @message2 "THEY 20 "ARE 20 "TAKING 20 "THE 20 "HOBBITS 20 "TO 20 "ISENGARD 00
 @message3 "TODAY 20 "IS 20 "A 20 "GOOD 20 "DAY 20 "FOR 20 "POPCORN 00
-
+@s1h "AUDIO 20 "SYNTHESIS 20 "WITH 20 "UXN 20 "VARVARA 00
+@s1l1 "BY 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
+@s2h "WHAT 20 "IS 20 "VARVARA? 00
+@s2l1 "A 20 "FANTASY 20 "CONSOLE 20 "AND 20 "PERMACOMPUTING 20 "EXPERIMENT 00
+@s2l2 "A 20 "STACK 20 "BASED 20 "ASSEMBLY 20 "LANGUAGE 20 "INSPIRED 20 "BY 20 "FORTH 00
+@s2l3 "A 20 "COMPUTER 20 "SPECIFICATION 20 "THAT 20 "RUNS 20 "IT 00
+@s2l4 "DESIGNED 20 "TO 20 "BE 20 "SIMPLE 20 "TO 20 "IMPLEMENT 00
 @bse $0100
 
 @saw 
