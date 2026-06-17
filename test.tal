@@ -1,3 +1,10 @@
+( to-do )
+( Make drawing functions take shorts )
+( Pages )
+( 	each page is a fixed number of pointers to strings )
+(   the on controller function increments the page pointer then redraws )
+
+
 ( devices )
 |00 @System  &vector $2 &pad $6 &r $2 &g $2 &b $2
 |10 @Console $8 &write $2
@@ -14,6 +21,22 @@
 %9ADD-X { .Screen/x DEI2 #0009 ADD2 .Screen/x DEO2 } ( -- )
 %8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
 %9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
+%DRAW { .Screen/pixel DEO } ( color -- )
+( increment X screen co-ordinate )
+%INC-X { .Screen/x DEI2 INC2 .Screen/x DEO2 } ( -- )
+( increment X by N )
+%ADD-X { .Screen/x DEI2 ADD2 .Screen/x DEO2 } ( N -- ) 
+( decrement X by N )
+%SUB-X { #00 SWP .Screen/x DEI2 SWP2 SUB2 .Screen/x DEO2 } ( N -- ) 
+%SUB-X2 { .Screen/x DEI2 SWP2 SUB2 .Screen/x DEO2 } ( N -- ) 
+( increment Y screen co-ordinate )
+%INC-Y { .Screen/y DEI2 INC2 .Screen/y DEO2 } ( -- )
+( increment Y by N )
+%ADD-Y { .Screen/y DEI2 ADD2 .Screen/y DEO2 } ( N -- ) 
+( decrement Y by N )
+%SUB-Y { #00 SWP .Screen/y DEI2 SWP2 SUB2 .Screen/y DEO2 } ( N -- ) 
+
+
 %GET-NOTE { #00 SWP ;melody ADD2 LDA }
 %MELODY_LENGTH { #08 }
 %SINE_LENGTH { #a0 }
@@ -38,7 +61,13 @@
       #0000 .Screen/x DEO2
       #0000 .Screen/y DEO2
 
-      ;test_string ;print JSR2
+      #0010 .Screen/width DEI2 #03 ;draw-rect JSR2
+
+
+      #0010 .Screen/x DEO2
+      #0004 .Screen/y DEO2
+
+      ;stedin-header ;print JSR2
       
       ;on-controller .Controller/vector DEO2
       ;on-frame .Screen/vector DEO2
@@ -51,6 +80,9 @@
 BRK
 
 @on-controller ( -- )
+  #0000 .Screen/x DEO2
+  #0010 .Screen/y DEO2
+  .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
   #0040 .Screen/x DEO2
   #0040 .Screen/y DEO2
   ;message ;print JSR2
@@ -87,7 +119,7 @@ JMP2r
   &p_loop
     ,&string-addr LDR2 LDA DUP #00 EQU ,&print-end JCN
     ;get-char JSR2 .Screen/addr DEO2
-    #03 .Screen/sprite DEO 9ADD-X
+    #0c .Screen/sprite DEO 9ADD-X
     ,&string-addr LDR2 INC2
     ,&string-addr STR2 ,&p_loop JMP
 &print-end
@@ -95,9 +127,32 @@ POP
 JMP2r
 &string-addr $2
 
+@draw-rect ( height^ width^ color -- )
+    ,&dr_color STR
+    ,&dr_width STR2 
+    #0000
+    &dr_loop
+        ,&dr_width LDR2 ,&dr_color LDR ;draw-line JSR2
+        INC-Y ,&dr_width LDR2 SUB-X2
+        INC2 GTHk2 ,&dr_loop JCN
+    POP2 POP2
+JMP2r
+&dr_width $2
+&dr_color $1
+
+@draw-line ( length^ color -- )
+     ,&dl_color STR
+     #0000
+     &dl_loop
+        ,&dl_color LDR DRAW INC-X
+        INC2 GTHk2 ,&dl_loop JCN
+     POP2 POP2
+JMP2r    
+&dl_color $1
 
 
 @test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
+@stedin-header "STEDIN 00
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 
 @bse $0100
