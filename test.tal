@@ -108,9 +108,12 @@ BRK
     #0020 .Screen/x DEO2
     #00e0 .Screen/y DEO2
     .current-slide LDZ2 #000a ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0100 .Screen/y DEO2
+    .current-slide LDZ2 #000c ADD2 LDA2 #08 ;print JSR2
     
     ( move pointer for next time ) 
-    .current-slide LDZ2 #000c ADD2 .current-slide STZ2
+    .current-slide LDZ2 #000e ADD2 .current-slide STZ2
 JMP2r
 
 @on-frame ( -> )
@@ -185,6 +188,7 @@ JMP2r
 =s1l1
 =empty-string
 =empty-string
+=empty-string
 @slide-2
 =s2h
 =s2l1
@@ -192,6 +196,15 @@ JMP2r
 =s2l3
 =s2l4
 =empty-string
+=empty-string
+@slide-3
+=s3h
+=s3l1
+=s3l2
+=s3l3
+=s3l4
+=s3l5
+=s3l6
 @end-of-slides
 00 00
 @empty-string 00
@@ -207,6 +220,13 @@ JMP2r
 @s2l2 "A 20 "STACK 20 "BASED 20 "ASSEMBLY 20 "LANGUAGE 20 "INSPIRED 20 "BY 20 "FORTH 00
 @s2l3 "A 20 "COMPUTER 20 "SPECIFICATION 20 "THAT 20 "RUNS 20 "IT 00
 @s2l4 "DESIGNED 20 "TO 20 "BE 20 "SIMPLE 20 "TO 20 "IMPLEMENT 00
+@s3h "THINGS 20 "THAT 20 "VARVARA 20 "DOES 20 "NOT 20 "HAVE 00
+@s3l1 "PRINT 20 20 "VARIABLES 20 20 "SCOPING 20 20 "IF 20 "STATEMENTS 20 20 "LOOPS 20 20 "REGISTERS 00
+@s3l2 "GREATER 20 "THAN 20 20 "LESS 20 "THAN 20 20 "THOSE 20 "CHARACTERS 20 20 "FONTS 00
+@s3l3 "TYPES 20 20 "SEQUENCES 20 20 "FLOATING 20 "POINTS 20 20 "NEGATIVE 20 "NUMBERS 00
+@s3l4 "32BITS 20 20 "STRINGS 20 20 "FUNCTIONS 20 20 "MODULES 20 20 "MEMORY 20 "MANAGEMENT 00
+@s3l5 "STD 20 "LIBRARY 20 20 "NETWORKING 20 20 "MODULO 20 20 "NOT 20 20 "PRECEDENCE 20 "RULES 00
+@s3l6  "EXCEPTIONS 20 20 "DEBUGGER 20 20 "OS 20 20 "TIMER 20 20 "COLORS 20 20 "POLARS 00
 @bse $0100
 
 @saw 
