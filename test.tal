@@ -1,3 +1,9 @@
+( to-do )
+( Pages )
+( 	each page is a fixed number of pointers to strings )
+(   the on controller function increments the page pointer then redraws )
+
+
 ( devices )
 |00 @System  &vector $2 &pad $6 &r $2 &g $2 &b $2
 |10 @Console $8 &write $2
@@ -14,8 +20,24 @@
 %9ADD-X { .Screen/x DEI2 #0009 ADD2 .Screen/x DEO2 } ( -- )
 %8ADD-Y { .Screen/y DEI2 #0008 ADD2 .Screen/y DEO2 } ( -- )
 %9ADD-Y { .Screen/y DEI2 #0009 ADD2 .Screen/y DEO2 } ( -- )
+%DRAW { .Screen/pixel DEO } ( color -- )
+( increment X screen co-ordinate )
+%INC-X { .Screen/x DEI2 INC2 .Screen/x DEO2 } ( -- )
+( increment X by N )
+%ADD-X { .Screen/x DEI2 ADD2 .Screen/x DEO2 } ( N -- ) 
+( decrement X by N )
+%SUB-X { #00 SWP .Screen/x DEI2 SWP2 SUB2 .Screen/x DEO2 } ( N -- ) 
+%SUB-X2 { .Screen/x DEI2 SWP2 SUB2 .Screen/x DEO2 } ( N -- ) 
+( increment Y screen co-ordinate )
+%INC-Y { .Screen/y DEI2 INC2 .Screen/y DEO2 } ( -- )
+( increment Y by N )
+%ADD-Y { .Screen/y DEI2 ADD2 .Screen/y DEO2 } ( N -- ) 
+( decrement Y by N )
+%SUB-Y { #00 SWP .Screen/y DEI2 SWP2 SUB2 .Screen/y DEO2 } ( N -- ) 
+
+
 %GET-NOTE { #00 SWP ;melody ADD2 LDA }
-%MELODY_LENGTH { #08 }
+%MELODY_LENGTH { #80 }
 %SINE_LENGTH { #a0 }
 %SAMPLE_LENGTH { #0100 }
 
@@ -26,6 +48,7 @@
 @timer     $1
 @progress  $1
 @sine-ctr  $1
+@current-slide $2
 
 ( main program )
 |0100
@@ -34,11 +57,6 @@
       #4dfd .System/g DEO2
       #4cf0 .System/b DEO2
 
-      ( set x,y coordinates )
-      #0000 .Screen/x DEO2
-      #0000 .Screen/y DEO2
-
-      ;test_string ;print JSR2
       
       ;on-controller .Controller/vector DEO2
       ;on-frame .Screen/vector DEO2
@@ -48,17 +66,59 @@
       ;bse .Audio0/addr DEO2
       #0100 .Audio0/length DEO2
       #dd .Audio0/volume DEO ( TODO: turn ON )
+      ;draw-slide JSR2
 BRK
 
 @on-controller ( -- )
-  #0040 .Screen/x DEO2
-  #0040 .Screen/y DEO2
-  ;message ;print JSR2
+	;draw-slide JSR2
 BRK
+
+@draw-slide ( -- )
+  .current-slide LDZ2 LDA2 ,&ds-continue JCN
+  ;slide-1 .current-slide STZ2 
+  &ds-continue
+    ( draw yellow bar )
+    #0000 .Screen/x DEO2
+    #0000 .Screen/y DEO2
+    #0010 .Screen/width DEI2 #03 ;draw-rect JSR2
+    ( stedin header )
+    #0010 .Screen/x DEO2
+    #0004 .Screen/y DEO2
+    ;stedin-header #0c ;print JSR2
+    ( draw background )
+    #0000 .Screen/x DEO2
+    #0010 .Screen/y DEO2
+    .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
+    ( get current slide )
+    #0020 .Screen/x DEO2
+    #0030 .Screen/y DEO2
+    .current-slide LDZ2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0060 .Screen/y DEO2
+    .current-slide LDZ2 #0002 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0080 .Screen/y DEO2
+    .current-slide LDZ2 #0004 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #00a0 .Screen/y DEO2
+    .current-slide LDZ2 #0006 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #00c0 .Screen/y DEO2
+    .current-slide LDZ2 #0008 ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #00e0 .Screen/y DEO2
+    .current-slide LDZ2 #000a ADD2 LDA2 #08 ;print JSR2
+    #0020 .Screen/x DEO2
+    #0100 .Screen/y DEO2
+    .current-slide LDZ2 #000c ADD2 LDA2 #08 ;print JSR2
+    
+    ( move pointer for next time ) 
+    .current-slide LDZ2 #000e ADD2 .current-slide STZ2
+JMP2r
 
 @on-frame ( -> )
 	( incr ) .timer LDZ INC .timer STZ 
-	( skip ) .timer LDZ #10 EQU #01 JCN [ BRK ]
+	( skip ) .timer LDZ #08 EQU #01 JCN [ BRK ]
   #0000 
   &sine-loop
     DUP2 DUP2 ;saw ADD2 LDA .sine-ctr LDZ #00 SWP ;sine ADD2 LDA ADD ROT ROT 
@@ -82,24 +142,121 @@ BRK
 JMP2r
 
 ( print a string, getting the correct char at each step )
-@print ( string-addr* -- )
+@print ( string-addr* color -- )
+  ,&print-color STR
   ,&string-addr STR2
   &p_loop
     ,&string-addr LDR2 LDA DUP #00 EQU ,&print-end JCN
     ;get-char JSR2 .Screen/addr DEO2
-    #03 .Screen/sprite DEO 9ADD-X
+    ,&print-color LDR .Screen/sprite DEO 9ADD-X
     ,&string-addr LDR2 INC2
     ,&string-addr STR2 ,&p_loop JMP
 &print-end
 POP
 JMP2r
 &string-addr $2
+&print-color $1
 
+@draw-rect ( height^ width^ color -- )
+    ,&dr_color STR
+    ,&dr_width STR2 
+    #0000
+    &dr_loop
+        ,&dr_width LDR2 ,&dr_color LDR ;draw-line JSR2
+        INC-Y ,&dr_width LDR2 SUB-X2
+        INC2 GTHk2 ,&dr_loop JCN
+    POP2 POP2
+JMP2r
+&dr_width $2
+&dr_color $1
 
+@draw-line ( length^ color -- )
+     ,&dl_color STR
+     #0000
+     &dl_loop
+        ,&dl_color LDR DRAW INC-X
+        INC2 GTHk2 ,&dl_loop JCN
+     POP2 POP2
+JMP2r    
+&dl_color $1
 
-@test_string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
+( slides )
+@slide-1
+=s1h
+=empty-string
+=empty-string
+=s1l1
+=empty-string
+=empty-string
+=empty-string
+@slide-2
+=s2h
+=s2l1
+=s2l2
+=s2l3
+=s2l4
+=empty-string
+=empty-string
+@slide-3
+=s3h
+=s3l1
+=s3l2
+=s3l3
+=s3l4
+=s3l5
+=s3l6
+@slide-4
+=s4h
+=s4l1
+=s4l2
+=s4l3
+=s4l4
+=s4l5
+=s4l6
+@slide-5
+=s5h
+=s5l1
+=s5l2
+=s5l3
+=s5l4
+=s5l5
+=s5l6
+@end-of-slides
+00 00
+@empty-string 00
+@test-string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
+@stedin-header "STEDIN 00
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
-
+@message2 "THEY 20 "ARE 20 "TAKING 20 "THE 20 "HOBBITS 20 "TO 20 "ISENGARD 00
+@message3 "TODAY 20 "IS 20 "A 20 "GOOD 20 "DAY 20 "FOR 20 "POPCORN 00
+@s1h "AUDIO 20 "SYNTHESIS 20 "WITH 20 "UXN 20 "VARVARA! 00
+@s1l1 "BY 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
+@s2h "WHAT 20 "IS 20 "VARVARA? 00
+@s2l1 "A 20 "FANTASY 20 "CONSOLE 20 "AND 20 "PERMACOMPUTING 20 "EXPERIMENT 00
+@s2l2 "A 20 "STACK 20 "BASED 20 "ASSEMBLY 20 "LANGUAGE 20 "INSPIRED 20 "BY 20 "FORTH 00
+@s2l3 "A 20 "COMPUTER 20 "SPECIFICATION 20 "THAT 20 "RUNS 20 "IT 00
+@s2l4 "DESIGNED 20 "TO 20 "BE 20 "SIMPLE 20 "TO 20 "IMPLEMENT 00
+@s3h "THINGS 20 "THAT 20 "VARVARA 20 "DOES 20 "NOT 20 "HAVE 00
+@s3l1 "PRINT 20 20 "VARIABLES 20 20 "SCOPING 20 20 "IF 20 "STATEMENTS 20 20 "LOOPS 20 20 "REGISTERS 00
+@s3l2 "GREATER 20 "THAN 20 20 "LESS 20 "THAN 20 20 "THOSE 20 "CHARACTERS 20 20 "FONTS 00
+@s3l3 "TYPES 20 20 "SEQUENCES 20 20 "FLOATING 20 "POINTS 20 20 "NEGATIVE 20 "NUMBERS 00
+@s3l4 "32BITS 20 20 "STRINGS 20 20 "FUNCTIONS 20 20 "MODULES 20 20 "MEMORY 20 "MANAGEMENT 00
+@s3l5 "STD 20 "LIBRARY 20 20 "NETWORKING 20 20 "MODULO 20 20 "NOT 20 20 "PRECEDENCE 20 "RULES 00
+@s3l6  "EXCEPTIONS 20 20 "DEBUGGER 20 20 "OS 20 20 "TIMER 20 20 "COLORS 20 20 "POLARS 00
+@s4h "SO 20 "WHAT 20 "DOES 20 "IT 20 "HAVE? 00
+@s4l1 "32 20 "OPCODES 20 "WITH 20 "3 20 "MODIFIERS 20 "EACH 00
+@s4l2 "64KB 20 "OF 20 "RAM 20 "SPLIT 20 "ACROSS 20 "3 20 "ADDRESSING 20 "MODES 00
+@s4l3 "HARDWARE 20 "ABSTRACTIONS 20 "FOR 20 "KEYBOARD 20 "MOUSE 20 "SCREEN 20 "ETC 00
+@s4l4 "PALETTE 20 "OF 20 "4 20 "COLORS 20 "FROM 20 "RANGE 20 "OF 20 "4096 00
+@s4l5 "TWO 20 "256 20 "BYTE 20 "STACKS 20 "WHICH 20 "ARE 20 "USED 20 "FOR 20 "ALL 20 "OPERATIONS
+@s4l6 "A 20 "SOUL! 00
+@s5h "WHAT 20 "HAVE 20 "WE 20 "DONE 20 "WITH 20 "VARVARA? 00
+@s5l1 "MADE 20 "A 20 "FONT 20 "AND 20 "WROTE 20 "A 20 "PRINT 20 "FUNCTION! 00
+@s5l2 "WROTE 20 "THIS 20 "PRESENTATION 20 "PROGRAM! 00
+@s5l3 "DONE 20 "SOME 20 "VERY 20 "SIMPLE 20 "AUDIO 20 "SYNTHESIS! 00
+@s5l4 "TAKEN 20 "60 20 "MINUTES 20 "TO 20 "WRITE 20 "A 20 "ROUTINE 20 "WITH 20 "ONE 20 "LOOP 00
+@s5l5 "HAD 20 "A 20 "BLOODY 20 "GREAT 20 "TIME! 00
+@s5l6 "POSSIBLY 20 "TRAUMATIZED 20 "VIVIAN 20 "BEYOND 20 "REPAIR 00
 @bse $0100
 
 @saw 
@@ -121,7 +278,23 @@ JMP2r
 	d0d3 d6d9 dcdf e2e5 e8eb eef1 f4f7 fafd 
 
 @melody
-  54 52 54 4f 4b 4f 48 ff
+  40 40 4c 40 40 4a 40 40
+  48 40 40 46 40 40 46 47
+  40 40 4c 40 40 4a 40 40
+  48 40 40 46 46 46 46 46
+  40 40 4c 40 40 4a 40 40
+  48 40 40 46 40 40 46 47
+  40 40 4c 40 40 4a 40 40
+  48 40 40 46 46 46 46 46
+  45 45 51 45 45 4f 45 45
+  4d 45 45 4b 45 45 4b 4c
+  45 45 51 45 45 4f 45 45
+  4d 45 45 4b 45 45 4b 4c
+  40 40 4c 40 40 4a 40 40
+  48 40 40 46 40 40 46 47
+  40 40 4c 40 40 4a 40 40
+  48 40 58 56 54 57 55 53
+    
 
 @sine
 80 83 86 89 8c 8f 92 95  98 9b 9e a1 a4 a7 aa ad  
