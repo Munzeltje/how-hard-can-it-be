@@ -167,6 +167,32 @@ JMP2r
 &string-addr $2
 &print-color $1
 
+( print a string, getting the correct char at each step )
+@print-big ( string-addr* color -- )
+  ,&print-color STR
+  ,&string-addr STR2
+  &p_loop
+    ,&string-addr LDR2 LDA DUP #00 EQU ,&print-end JCN
+    ;get-char JSR2 ( address of the small sprite )
+    DUP LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char STA ;big-char #0001 ADD2 STA   
+    
+    DUP INC2 LDA #0F AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+    DUP INC2 INC2 LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+    DUP INC2 INC2 INC2 LDA #0F AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+
+
+
+
+    ;get-char JSR2 .Screen/addr DEO2
+    ,&print-color LDR .Screen/sprite DEO 9ADD-X
+    ,&string-addr LDR2 INC2
+    ,&string-addr STR2 ,&p_loop JMP
+&print-end
+POP
+JMP2r
+&string-addr $2
+&print-color $1
+
 @draw-rect ( height^ width^ color -- )
     ,&dr_color STR
     ,&dr_width STR2 
@@ -352,5 +378,10 @@ c0 be bb b9 b6 b4 b1 ae  ab a8 a6 a3 a0 9d 9a 97
 1b 1c 1c 1d 1e 1f 20 22  23 24 26 27 29 2b 2d 2e  
 30 32 34 37 39 3b 3e 40  42 45 48 4a 4d 50 53 55  
 58 5b 5e 61 64 67 6a 6d  70 74 77 7a 7d 80 80 80        
+
+@big-char-lookup
+00 03 0c 0f 30 33 3c 3f c0 c3 cc cf f0 f3 fc ff
+
+@big-char $8
 
 ~font.tal
