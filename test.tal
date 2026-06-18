@@ -74,6 +74,10 @@ BRK
 BRK
 
 @draw-slide ( -- )
+  ( set system colors )
+  #4cff .System/r DEO2
+  #4dfd .System/g DEO2
+  #4cf0 .System/b DEO2
   .current-slide LDZ2 LDA2 ,&ds-continue JCN
   ;slide-1 .current-slide STZ2 
   &ds-continue
@@ -117,6 +121,12 @@ BRK
 JMP2r
 
 @on-frame ( -> )
+  ( we check for the slide after the one we really want )
+  ( because the current slide pointer is incremented after display )
+  .current-slide LDZ2 ;slide-8 EQU2 #01 JCN [ BRK ]
+  .System/r DEI2 #0001 ADD2 #00 .timer LDZ ADD2 .System/r DEO2
+  .System/g DEI2 #0001 ADD2 .System/g DEO2
+  .System/b DEI2 #0003 ADD2 .System/b DEO2
 	( incr ) .timer LDZ INC .timer STZ 
 	( skip ) .timer LDZ #08 EQU #01 JCN [ BRK ]
   #0000 
@@ -124,7 +134,7 @@ JMP2r
     DUP2 DUP2 ;saw ADD2 LDA .sine-ctr LDZ #00 SWP ;sine ADD2 LDA ADD ROT ROT 
     ;bse ADD2 STA
     ( increment sine offset, with mask )
-    .sine-ctr LDZ INC INC INC INC SINE_LENGTH #01 SUB AND .sine-ctr STZ
+    .sine-ctr LDZ INC INC INC INC INC SINE_LENGTH #01 SUB AND .sine-ctr STZ
     INC2 DUP2 SAMPLE_LENGTH LTH2 ,&sine-loop JCN
   POP2
 
@@ -221,6 +231,30 @@ JMP2r
 =s5l4
 =s5l5
 =s5l6
+@slide-6
+=s6h
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+@slide-7
+=s7h
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+@slide-8
+=s8h
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+=empty-string
+=empty-string
 @end-of-slides
 00 00
 @empty-string 00
@@ -257,6 +291,9 @@ JMP2r
 @s5l4 "TAKEN 20 "60 20 "MINUTES 20 "TO 20 "WRITE 20 "A 20 "ROUTINE 20 "WITH 20 "ONE 20 "LOOP 00
 @s5l5 "HAD 20 "A 20 "BLOODY 20 "GREAT 20 "TIME! 00
 @s5l6 "POSSIBLY 20 "TRAUMATIZED 20 "VIVIAN 20 "BEYOND 20 "REPAIR 00
+@s6h "AND 20 "NOW 20 "A 20 "BRIEF 20 "MUSICAL 20 "INTERLUDE 00
+@s7h "DOOM 20 "OST 20 20 "E1M1 20 20 "AT 20 "DOOMS 20 "GATE 00
+@s8h "CONCLUSIONS 00 
 @bse $0100
 
 @saw 
