@@ -31,7 +31,7 @@
 ( increment Y screen co-ordinate )
 %INC-Y { .Screen/y DEI2 INC2 .Screen/y DEO2 } ( -- )
 ( increment Y by N )
-%ADD-Y { .Screen/y DEI2 ADD2 .Screen/y DEO2 } ( N -- ) 
+%ADD-Y { #00 SWP .Screen/y DEI2 ADD2 .Screen/y DEO2 } ( N -- ) 
 ( decrement Y by N )
 %SUB-Y { #00 SWP .Screen/y DEI2 SWP2 SUB2 .Screen/y DEO2 } ( N -- ) 
 
@@ -84,38 +84,27 @@ BRK
     ( draw yellow bar )
     #0000 .Screen/x DEO2
     #0000 .Screen/y DEO2
-    #0010 .Screen/width DEI2 #03 ;draw-rect JSR2
-    ( stedin header )
-    #0010 .Screen/x DEO2
-    #0004 .Screen/y DEO2
-    ;stedin-header #0c ;print JSR2
+    #0020 .Screen/width DEI2 #03 ;draw-rect JSR2
     ( draw background )
     #0000 .Screen/x DEO2
-    #0010 .Screen/y DEO2
+    #0020 .Screen/y DEO2
     .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
+    ( stedin header )
+    #0010 .Screen/x DEO2
+    #0006 .Screen/y DEO2
+    ;stedin-header #0c ;print-big JSR2
     ( get current slide )
-    #0020 .Screen/x DEO2
+    #0010 .Screen/x DEO2
     #0030 .Screen/y DEO2
-    .current-slide LDZ2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #0060 .Screen/y DEO2
-    .current-slide LDZ2 #0002 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #0080 .Screen/y DEO2
-    .current-slide LDZ2 #0004 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #00a0 .Screen/y DEO2
-    .current-slide LDZ2 #0006 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #00c0 .Screen/y DEO2
-    .current-slide LDZ2 #0008 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #00e0 .Screen/y DEO2
-    .current-slide LDZ2 #000a ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #0100 .Screen/y DEO2
-    .current-slide LDZ2 #000c ADD2 LDA2 #08 ;print JSR2
-    
+    .current-slide LDZ2 LDA2 #08 ;print-big JSR2
+    ( number of lines on a slide )
+    #06
+    #00 ( counter )
+    &draw-slide-next
+      #0020 .Screen/x DEO2
+      DUP INC #00 SWP #0020 MUL2 #0040 ADD2 .Screen/y DEO2
+      DUP INC #00 SWP #0002 MUL2 .current-slide LDZ2 ADD2 LDA2 #08 ;print JSR2
+      INC GTHk ,&draw-slide-next JCN 
     ( move pointer for next time ) 
     .current-slide LDZ2 #000e ADD2 .current-slide STZ2
 JMP2r
@@ -166,6 +155,50 @@ POP
 JMP2r
 &string-addr $2
 &print-color $1
+
+( print a string, getting the correct char at each step )
+@print-big ( string-addr* color -- )
+  ;&print-big-color STA
+  ;&string-big-addr STA2
+  ;big-char .Screen/addr DEO2
+  &pb_loop
+    ;&string-big-addr LDA2 LDA DUP #00 NEQ ,&pb-continue JCN
+    ;&print-big-end JMP2
+
+    &pb-continue
+      ;get-char JSR2 ( address of the small sprite )
+     ( 0100    )
+      DUP2                LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      8ADD-X
+      DUP2                LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      #08 SUB-X #08 ADD-Y #0004 ADD2
+      DUP2                LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      8ADD-X
+      DUP2                LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      9ADD-X #08 SUB-Y
+      ;&string-big-addr LDA2 INC2
+      ;&string-big-addr STA2 ;&pb_loop JMP2
+&print-big-end
+POP
+JMP2r
+&string-big-addr $2
+&print-big-color $1
 
 @draw-rect ( height^ width^ color -- )
     ,&dr_color STR
@@ -263,14 +296,14 @@ JMP2r
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 @message2 "THEY 20 "ARE 20 "TAKING 20 "THE 20 "HOBBITS 20 "TO 20 "ISENGARD 00
 @message3 "TODAY 20 "IS 20 "A 20 "GOOD 20 "DAY 20 "FOR 20 "POPCORN 00
-@s1h "AUDIO 20 "SYNTHESIS 20 "WITH 20 "UXN 20 "VARVARA! 00
+@s1h "AUDIO 20 "SYNTHESIS 20 "WITH 20 "VARVARA! 00
 @s1l1 "BY 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 @s2h "WHAT 20 "IS 20 "VARVARA? 00
 @s2l1 "A 20 "FANTASY 20 "CONSOLE 20 "AND 20 "PERMACOMPUTING 20 "EXPERIMENT 00
 @s2l2 "A 20 "STACK 20 "BASED 20 "ASSEMBLY 20 "LANGUAGE 20 "INSPIRED 20 "BY 20 "FORTH 00
 @s2l3 "A 20 "COMPUTER 20 "SPECIFICATION 20 "THAT 20 "RUNS 20 "IT 00
 @s2l4 "DESIGNED 20 "TO 20 "BE 20 "SIMPLE 20 "TO 20 "IMPLEMENT 00
-@s3h "THINGS 20 "THAT 20 "VARVARA 20 "DOES 20 "NOT 20 "HAVE 00
+@s3h "THINGS 20 "VARVARA 20 "DOES 20 "NOT 20 "HAVE 00
 @s3l1 "PRINT 20 20 "VARIABLES 20 20 "SCOPING 20 20 "IF 20 "STATEMENTS 20 20 "LOOPS 20 20 "REGISTERS 00
 @s3l2 "GREATER 20 "THAN 20 20 "LESS 20 "THAN 20 20 "THOSE 20 "CHARACTERS 20 20 "FONTS 00
 @s3l3 "TYPES 20 20 "SEQUENCES 20 20 "FLOATING 20 "POINTS 20 20 "NEGATIVE 20 "NUMBERS 00
@@ -284,15 +317,15 @@ JMP2r
 @s4l4 "PALETTE 20 "OF 20 "4 20 "COLORS 20 "FROM 20 "RANGE 20 "OF 20 "4096 00
 @s4l5 "TWO 20 "256 20 "BYTE 20 "STACKS 20 "WHICH 20 "ARE 20 "USED 20 "FOR 20 "ALL 20 "OPERATIONS
 @s4l6 "A 20 "SOUL! 00
-@s5h "WHAT 20 "HAVE 20 "WE 20 "DONE 20 "WITH 20 "VARVARA? 00
+@s5h "WHAT 20 "DID 20 "WE 20 "DO 20 "WITH 20 "VARVARA? 00
 @s5l1 "MADE 20 "A 20 "FONT 20 "AND 20 "WROTE 20 "A 20 "PRINT 20 "FUNCTION! 00
 @s5l2 "WROTE 20 "THIS 20 "PRESENTATION 20 "PROGRAM! 00
 @s5l3 "DONE 20 "SOME 20 "VERY 20 "SIMPLE 20 "AUDIO 20 "SYNTHESIS! 00
 @s5l4 "TAKEN 20 "60 20 "MINUTES 20 "TO 20 "WRITE 20 "A 20 "ROUTINE 20 "WITH 20 "ONE 20 "LOOP 00
 @s5l5 "HAD 20 "A 20 "BLOODY 20 "GREAT 20 "TIME! 00
 @s5l6 "POSSIBLY 20 "TRAUMATIZED 20 "VIVIAN 20 "BEYOND 20 "REPAIR 00
-@s6h "AND 20 "NOW 20 "A 20 "BRIEF 20 "MUSICAL 20 "INTERLUDE 00
-@s7h "DOOM 20 "OST 20 20 "E1M1 20 20 "AT 20 "DOOMS 20 "GATE 00
+@s6h "AND 20 "NOW 20 "A 20 "MUSICAL 20 "INTERLUDE 00
+@s7h "DOOM 20 "OST 20 "E1M1 20 "AT 20 "DOOMS 20 "GATE 00
 @s8h "CONCLUSIONS 00 
 @s8l1 "WE 20 "TAKE 20 "MODERN 20 "CONVENIENCES 20 "FOR 20 "GRANTED 00
 @s8l2 "WE 20 "ALSO 20 "DO 20 "NOT 20 "REALLY 20 "NEED 20 "THEM 00
@@ -352,5 +385,10 @@ c0 be bb b9 b6 b4 b1 ae  ab a8 a6 a3 a0 9d 9a 97
 1b 1c 1c 1d 1e 1f 20 22  23 24 26 27 29 2b 2d 2e  
 30 32 34 37 39 3b 3e 40  42 45 48 4a 4d 50 53 55  
 58 5b 5e 61 64 67 6a 6d  70 74 77 7a 7d 80 80 80        
+
+@big-char-lookup
+00 03 0c 0f 30 33 3c 3f c0 c3 cc cf f0 f3 fc ff
+
+@big-char $8
 
 ~font.tal
