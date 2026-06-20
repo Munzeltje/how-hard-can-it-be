@@ -97,25 +97,14 @@ BRK
     #0010 .Screen/x DEO2
     #0030 .Screen/y DEO2
     .current-slide LDZ2 LDA2 #08 ;print-big JSR2
-    #0020 .Screen/x DEO2
-    #0060 .Screen/y DEO2
-    .current-slide LDZ2 #0002 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #0080 .Screen/y DEO2
-    .current-slide LDZ2 #0004 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #00a0 .Screen/y DEO2
-    .current-slide LDZ2 #0006 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #00c0 .Screen/y DEO2
-    .current-slide LDZ2 #0008 ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #00e0 .Screen/y DEO2
-    .current-slide LDZ2 #000a ADD2 LDA2 #08 ;print JSR2
-    #0020 .Screen/x DEO2
-    #0100 .Screen/y DEO2
-    .current-slide LDZ2 #000c ADD2 LDA2 #08 ;print JSR2
-    
+    ( number of lines on a slide )
+    #06
+    #00 ( counter )
+    &draw-slide-next
+      #0020 .Screen/x DEO2
+      DUP INC #00 SWP #0020 MUL2 #0040 ADD2 .Screen/y DEO2
+      DUP INC #00 SWP #0002 MUL2 .current-slide LDZ2 ADD2 LDA2 #08 ;print JSR2
+      INC GTHk ,&draw-slide-next JCN 
     ( move pointer for next time ) 
     .current-slide LDZ2 #000e ADD2 .current-slide STZ2
 JMP2r
