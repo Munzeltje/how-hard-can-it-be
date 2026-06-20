@@ -31,7 +31,7 @@
 ( increment Y screen co-ordinate )
 %INC-Y { .Screen/y DEI2 INC2 .Screen/y DEO2 } ( -- )
 ( increment Y by N )
-%ADD-Y { .Screen/y DEI2 ADD2 .Screen/y DEO2 } ( N -- ) 
+%ADD-Y { #00 SWP .Screen/y DEI2 ADD2 .Screen/y DEO2 } ( N -- ) 
 ( decrement Y by N )
 %SUB-Y { #00 SWP .Screen/y DEI2 SWP2 SUB2 .Screen/y DEO2 } ( N -- ) 
 
@@ -84,19 +84,19 @@ BRK
     ( draw yellow bar )
     #0000 .Screen/x DEO2
     #0000 .Screen/y DEO2
-    #0010 .Screen/width DEI2 #03 ;draw-rect JSR2
-    ( stedin header )
-    #0010 .Screen/x DEO2
-    #0004 .Screen/y DEO2
-    ;stedin-header #0c ;print-big JSR2
+    #0020 .Screen/width DEI2 #03 ;draw-rect JSR2
     ( draw background )
     #0000 .Screen/x DEO2
-    #0010 .Screen/y DEO2
+    #0020 .Screen/y DEO2
     .Screen/height DEI2 .Screen/width DEI2 #02 ;draw-rect JSR2
+    ( stedin header )
+    #0010 .Screen/x DEO2
+    #0006 .Screen/y DEO2
+    ;stedin-header #0c ;print-big JSR2
     ( get current slide )
     #0020 .Screen/x DEO2
     #0030 .Screen/y DEO2
-    .current-slide LDZ2 LDA2 #08 ;print JSR2
+    .current-slide LDZ2 LDA2 #08 ;print-big JSR2
     #0020 .Screen/x DEO2
     #0060 .Screen/y DEO2
     .current-slide LDZ2 #0002 ADD2 LDA2 #08 ;print JSR2
@@ -171,6 +171,7 @@ JMP2r
 @print-big ( string-addr* color -- )
   ;&print-big-color STA
   ;&string-big-addr STA2
+  ;big-char .Screen/addr DEO2
   &pb_loop
     ;&string-big-addr LDA2 LDA DUP #00 NEQ ,&pb-continue JCN
     ;&print-big-end JMP2
@@ -182,12 +183,26 @@ JMP2r
       DUP2 INC2           LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
       DUP2 INC2 INC2      LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
       DUP2 INC2 INC2 INC2 LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
-
-
-
-
-      ;big-char .Screen/addr DEO2
-      ;&print-big-color LDA .Screen/sprite DEO 9ADD-X
+      ;&print-big-color LDA .Screen/sprite DEO
+      8ADD-X
+      DUP2                LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      #08 SUB-X #08 ADD-Y #0004 ADD2
+      DUP2                LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #04 SFT #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      8ADD-X
+      DUP2                LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0000 ADD2 STA ;big-char #0001 ADD2 STA   
+      DUP2 INC2           LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0002 ADD2 STA ;big-char #0003 ADD2 STA   
+      DUP2 INC2 INC2      LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0004 ADD2 STA ;big-char #0005 ADD2 STA   
+      DUP2 INC2 INC2 INC2 LDA #0f AND #00 SWP ;big-char-lookup ADD2 LDA DUP ;big-char #0006 ADD2 STA ;big-char #0007 ADD2 STA   
+      ;&print-big-color LDA .Screen/sprite DEO
+      9ADD-X #08 SUB-Y
       ;&string-big-addr LDA2 INC2
       ;&string-big-addr STA2 ;&pb_loop JMP2
 &print-big-end
@@ -288,7 +303,7 @@ JMP2r
 00 00
 @empty-string 00
 @test-string "ABCDEFGHIJKLMNOPQRSTUVWXYZ 20 "0123456789!.? 00 
-@stedin-header "HSTEDIN 00
+@stedin-header "STEDIN 00
 @message "GREETINGS 20 "FROM 20 "TEAM 20 "HOW 20 "HARD 20 "CAN 20 "IT 20 "BE? 00
 @message2 "THEY 20 "ARE 20 "TAKING 20 "THE 20 "HOBBITS 20 "TO 20 "ISENGARD 00
 @message3 "TODAY 20 "IS 20 "A 20 "GOOD 20 "DAY 20 "FOR 20 "POPCORN 00
